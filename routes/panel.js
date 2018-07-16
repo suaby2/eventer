@@ -1,5 +1,5 @@
 import express from 'express';
-import models from '../server/models';
+import models from '../models';
 import bcrypt from 'bcrypt';
 
 const router = express.Router();
@@ -8,7 +8,7 @@ router.get('/register', (req, res) => {
    res.render('register');
 });
 router.post('/register', (req, res) => {
-    // console.log(req.body);
+    console.log(req.body);
     models.User.findOne({where: {email: req.body.email}}).then( user => {
 
         if(!user) {
@@ -35,14 +35,19 @@ router.get('/login', (req, res) => {
     res.render('login');
 });
 router.post('/login', (req, res) =>{
-    models.User.findOne({where: {emial: req.body.email}}).then(user => {
+    models.User.findOne({where: {email: req.body.email}}).then(user => {
         if(!user){
             res.render('login', {error: "User with this email not exist"});
         }
+        console.log(user.id);
+        // if(req.query.username === "amy" || req.query.password === "amyspassword") {
+        //     req.session.user = "amy";
+        //     req.session.admin = true;
+        //     res.send("login success!");
+        // }
         res.redirect('/dashboard');
     });
 });
-
 router.get('/dashboard', (req,res) => {
     res.render('dashboard')
 });
