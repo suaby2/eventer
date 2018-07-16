@@ -1,7 +1,7 @@
 {
   "development": {
     "username": "dev",
-    "password": "dev",
+    "password": "dev123",
     "database": "eventer",
     "host": "127.0.0.1",
     "dialect": "postgres"
