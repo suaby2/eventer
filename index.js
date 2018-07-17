@@ -3,51 +3,35 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import logger from 'morgan';
 import cookieParser from 'cookie-parser';
-import expressSession from 'express-session';
-
-import panelRoutes from './routes/panel';
-
+import session from 'express-session';
 const app = express();
+const Sequelize = require('sequelize');
+var env       = process.env.NODE_ENV || 'development';
+var config    = require(__dirname + '/config/config.js')[env];
 
+const SequelizeStore = require('connect-session-sequelize')(session.Store);
+if (config.use_env_variable) {
+    var sequelize = new Sequelize(process.env[config.use_env_variable]);
+} else {
+    var sequelize = new Sequelize(config.database, config.username, config.password, config);
+}
 app.set('view engine', 'pug');
 
-const SessionStore = require('express-session-sequelize')(expressSession.Store);
-
-const Sequelize = require('sequelize');
-const myDatabase = new Sequelize('eventer', 'postgres', 'postgres', {
-    host: '127.0.0.1',
-    dialect: 'postgres',
-});
-
-const sequelizeSessionStore = new SessionStore({
-    db: myDatabase,
-});
-
-
 app.use(cookieParser());
-app.use(expressSession({
-    key: 'user_sid',
-    secret: process.env.COOKIE_SECRET,
-    store: sequelizeSessionStore,
+app.use(session({
+    secret: "Very Secret Code",
+    store: new SequelizeStore({
+        db: sequelize
+    }),
     resave: false,
-    saveUninitialized: false,
-    cookie: { maxAge: 30 * 24 * 60 * 60 * 1000 } // 30 days
+    saveUninitialized: true,
+    cookie: {
+        maxAge: 60 * 10 * 1000,
+        httpOnly: false
+    } // 5 minutes
 }));
 
-app.use((req, res, next) => {
-    if (req.cookies.user_sid && !req.session.user) {
-        res.clearCookie('user_sid');
-    }
-    next();
-});
 
-var sessionChecker = (req, res, next) => {
-    if (req.session.user && req.cookies.user_sid) {
-        res.redirect('/dashboard');
-    } else {
-        next();
-    }
-};
 
 // Parse incoming requests data
 app.use(bodyParser.json());
@@ -55,18 +39,39 @@ app.use(bodyParser.urlencoded({ extended: false }));
 // Log requests to the console.
 app.use(logger('dev'));
 
+
 //Routes
+import panelRoutes from './routes/panel';
 app.use('/panel', panelRoutes);
+
+app.use(function(req, res, next) {
+    console.log(req.session);
+    console.log("=====================");
+    console.log(req.cookies);
+    next();
+});
 
 
 app.get('/', (req, res) => {
-    console.log(req.session);
     res.render('index');
 });
+app.get('/dashboard', (req, res) => {
+    if(req.session && req.session.user) {
+        res.render('dashboard', {user: req.session.user});
+    } else {
+        res.redirect('/panel/login')
+    }
 
+});
 app.get('/logout', (req, res) => {
-   req.session.destroy();
-   res.send('Logout Successful');
+    req.session.destroy(function (err) {
+        if (err) return next(err)
+        res.redirect('/panel/login')
+    })
+});
+
+app.use(function (req, res, next) {
+    res.status(404).send("Sorry can't find that!")
 });
 
 

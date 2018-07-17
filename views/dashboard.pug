@@ -1,0 +1,7 @@
+extends base
+
+block body
+    h1 Hello,
+        if (user.nick)
+            #{user.nick}
+    div #[a(href="/logout") Logout]

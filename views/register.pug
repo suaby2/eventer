@@ -5,6 +5,9 @@ block body
     h2 Register Page
     form(method="post" action="/panel/register")
         div(class="form-group")
+            label Nick:
+            input(type="text" name="nick" required=true)
+        div(class="form-group")
             label Email:
             input(type="email" name="email" required=true)
         div(class="form-group")
