@@ -44,12 +44,12 @@ app.use(logger('dev'));
 import panelRoutes from './routes/panel';
 app.use('/panel', panelRoutes);
 
-app.use(function(req, res, next) {
-    console.log(req.session);
-    console.log("=====================");
-    console.log(req.cookies);
-    next();
-});
+// app.use(function(req, res, next) {
+    // console.log(req.session);
+    // console.log("=====================");
+    // console.log(req.cookies);
+    // next();
+// });
 
 
 app.get('/', (req, res) => {
@@ -57,6 +57,7 @@ app.get('/', (req, res) => {
 });
 app.get('/dashboard', (req, res) => {
     if(req.session && req.session.user) {
+        console.log(req.session.user);
         res.render('dashboard', {user: req.session.user});
     } else {
         res.redirect('/panel/login')

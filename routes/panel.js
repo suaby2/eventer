@@ -46,7 +46,7 @@ router.post('/login', (req, res, next) =>{
                 id: user.id,
                 email: user.email,
                 nick: user.nick
-            }
+            };
             req.session.user = userData;
             req.session.save(function (err) {
                 if (err) return next(err)
