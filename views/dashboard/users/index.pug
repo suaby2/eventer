@@ -1,0 +1,9 @@
+html
+    head
+    body
+        h1 List of users
+        a(href="/dashboard/users/create") Create User
+        if users
+            ul
+            each user in users
+                li ID: #{user.id} | NICK: #{user.nick} | ROLE: #{user.role_id}

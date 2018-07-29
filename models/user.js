@@ -21,10 +21,15 @@ module.exports = (sequelize, DataTypes, bcrypt) => {
     nick: {
         type: DataTypes.STRING,
         allowNull: true
+    },
+    role_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        defaultValue: 1
     }
   });
   User.associate = function(models) {
-    // associations can be defined here
+    User.belongsTo(models.Role, {foreignKey: 'role_id'});
   };
   return User;
 };

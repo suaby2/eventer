@@ -4,5 +4,9 @@ block body
     if user
         h1 Hello, #{user.nick}
 
+
+    ul
+        li.
+            #[a(href="/dashboard/users/") Users]
     div #[a(href="/events/create") Create Event]
     div #[a(href="/logout") Logout]

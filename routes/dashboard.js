@@ -9,7 +9,6 @@ router.get('/register', (req, res) => {
 });
 router.post('/register', (req, res) => {
     models.User.findOne({where: {email: req.body.email}}).then( user => {
-
         if(!user) {
             bcrypt.hash(req.body.password, 14, (err, hash) => {
                 if(!err) {
@@ -37,7 +36,6 @@ router.post('/login', (req, res, next) =>{
 
     models.User.findOne({where: {email: req.body.email }}).then(user => {
         if(!user){
-
             res.render('login', {error: "User with this email not exist"});
         } else if (!bcrypt.compareSync(req.body.password, user.password)) {
             res.render('login', {error: "Wrong Password"});
@@ -53,6 +51,46 @@ router.post('/login', (req, res, next) =>{
                 res.redirect('/dashboard');
             })
 
+        }
+    });
+});
+
+
+/*
+*
+* USERS ROUTES
+*
+ */
+
+router.get('/users', (req,res) => {
+
+   models.User.findAll().then(users => {
+       
+       res.render('dashboard/users/index', {users: users});
+   });
+});
+
+router.get('/users/create', (req, res) => {
+   res.render('dashboard/users/create');
+});
+router.post('/users/create', (req, res) => {
+    models.User.findOne({where: {email: req.body.email}}).then( user => {
+        if(!user) {
+            bcrypt.hash(req.body.password, 14, (err, hash) => {
+                if(!err) {
+                    let newUser = {
+                        nick: req.body.nick,
+                        email: req.body.email,
+                        password: hash
+                    };
+                    models.User.create(newUser).then(user => {
+                        res.redirect('/dashboard/users');
+                    });
+                }
+            });
+
+        } else {
+            res.render('/dashboard/users/create', {error: "User with this email already exist"});
         }
     });
 });

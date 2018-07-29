@@ -1,0 +1,17 @@
+html
+    head
+    body
+        h1 List of users
+
+        form(method="POST", action="/dashboard/users/create")
+            div.form-group
+                label(for="nick") Nick <br>
+                input(type="text" id="nick" name="nick")
+            div.form-group
+                label(for="email") Email <br>
+                input(type="email" id="email" name="email")
+            div.form-group
+                label(for="password") password <br>
+                input(type="text" id="password" name="password")
+            div.form-group
+                input(type="submit" value="save user")
