@@ -6,4 +6,8 @@ html
         if users
             ul
             each user in users
-                li ID: #{user.id} | NICK: #{user.nick} | ROLE: #{user.role_id}
+                li
+                    span ID: #[a(href='/dashboard/users/'+user.id) #{user.id}]
+
+                    span NICK: #{user.nick} |
+                    span ROLE: #{user.role.name}

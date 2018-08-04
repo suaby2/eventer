@@ -44,7 +44,6 @@ app.use(session({
     } // 5 minutes
 }));
 
-
 //Routes
 app.use('/', appRoutes);
 app.use('/dashboard', dashboardRoutes);
