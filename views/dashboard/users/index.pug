@@ -1,13 +1,22 @@
-html
-    head
-    body
-        h1 List of users
-        a(href="/dashboard/users/create") Create User
-        if users
-            ul
-            each user in users
-                li
-                    span ID: #[a(href='/dashboard/users/'+user.id) #{user.id}]
+extends ../base.pug
+block content
+    h1 List of users
+    if users
+        table.table
+            thead
+                tr
+                    th(scope="col") ID
+                    th(scope="col") EMAIL
+                    th(scope="col") NICK
+                    th(scope="col") ROLE
+                    th(scope="col") MANAGE
+            tbody
+                each user in users
+                    tr
+                        td #[a(href='/dashboard/users/'+user.id) #{user.id}]
+                        td #{user.email}
+                        td #{user.nick}
+                        td #{user.role.name}
+                        th(scope="col") #[a(href='/dashboard/users/'+user.id + '/edit') Edit] / #[a(href='/dashboard/users/'+user.id + '/remove') Remove]
 
-                    span NICK: #{user.nick} |
-                    span ROLE: #{user.role.name}
+        a(href="/dashboard/users/create").btn.btn-info Create User

@@ -16,7 +16,10 @@ router.get('/register', (req, res) => {
     res.render('register');
 });
 router.post('/register', (req, res) => {
-    models.User.findOne({where: {email: req.body.email}}).then( user => {
+    models.User.findOne({
+        attributes: ['email'],
+        where: {email: req.body.email},
+        }).then( user => {
         if(!user) {
             bcrypt.hash(req.body.password, 14, (err, hash) => {
                 if(!err) {
@@ -40,7 +43,10 @@ router.post('/register', (req, res) => {
     Login
  */
 router.get('/login',  (req, res) => {
-    res.render('login');
+  if(req.session && req.session.user) {
+    res.redirect('/');
+  }
+  res.render('login');
 });
 router.post('/login', (req, res, next) =>{
 
@@ -66,12 +72,12 @@ router.post('/login', (req, res, next) =>{
 });
 router.get('/dashboard/*', getSession);
 router.get('/dashboard',getSession, (req, res) => {
-      res.render('dashboard', {user: req.session.user});
+      res.render('dashboard/index', {user: req.session.user});
 });
 router.get('/logout', (req, res) => {
     req.session.destroy(function (err) {
         if (err) return next(err)
-        res.redirect('/dashboard/login')
+        res.redirect('login')
     })
 });
 

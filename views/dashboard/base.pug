@@ -1,0 +1,19 @@
+block vars
+doctype html
+html
+    head
+        title LanSpace | #{title}
+        link(rel='stylesheet', href="/pub/css/bootstrap.min.css")
+        link(rel='stylesheet', href="/pub/css/bootstrap-grid.min.css")
+    body
+        div.row
+            div.col-2
+                h3 Menu
+                ul.menu
+                    li.menu-item
+                        a(href="/dashboard/users") Users
+                    li.menu-item
+                        a(href="/dashboard/events") Events
+            div.col-10
+                block content
+

@@ -4,6 +4,7 @@ import bodyParser from 'body-parser';
 import logger from 'morgan';
 import cookieParser from 'cookie-parser';
 import session from 'express-session';
+import path from 'path';
 import dashboardRoutes from './routes/dashboard';
 import appRoutes from './routes/index';
 
@@ -23,8 +24,9 @@ if (config.use_env_variable) {
     var sequelize = new Sequelize(config.database, config.username, config.password, config);
 }
 
-
 app.set('view engine', 'pug');
+app.set('views', path.join(__dirname, 'views'));
+app.use("/pub", express.static(path.join(__dirname, "pub")));
 
 
 app.use(cookieParser());

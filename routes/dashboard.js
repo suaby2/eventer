@@ -23,6 +23,10 @@ router.get('/users', (req,res) => {
     });
 });
 
+router.get('/users/create', (req, res) => {
+  res.render('dashboard/users/create');
+});
+
 router.get('/users/:id', (req, res) => {
   console.log("PARAM_ID", req.params.id);
   models.User.findOne({ where: {id: req.params.id} }).then(user => {
@@ -31,9 +35,7 @@ router.get('/users/:id', (req, res) => {
   });
 });
 
-router.get('/users/create', (req, res) => {
-   res.render('dashboard/users/create');
-});
+
 router.post('/users/create', (req, res) => {
     models.User.findOne({where: {email: req.body.email}}).then( user => {
         if(!user) {
