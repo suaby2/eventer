@@ -100,6 +100,7 @@ router.get('/users/:id/remove', (req,res) => {
   });
 });
 // TODO: THIS POST REMOVE ALL USERS NOT ONE. NEXT TIME NEED FIX
+// TODO: AFTER REMOVE USER SESSION STAY STILL ACTIVE - NEED FIX
 router.post('/users/:id/remove', (req, res) => {
   models.User.destroy({
     where: {id: req.params.id}
