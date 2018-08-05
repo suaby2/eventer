@@ -24,8 +24,38 @@ router.get('/users', (req,res) => {
 });
 
 router.get('/users/create', (req, res) => {
-  res.render('dashboard/users/create');
+  models.Role.findAll({
+    attributes:['id', 'name']
+  }).then(roles => {
+    res.render('dashboard/users/create', {
+      pageTitle: "Create user with privileges",
+      roles: roles
+    });
+  });
 });
+
+router.post('/users/create', (req, res) => {
+  models.User.findOne({where: {email: req.body.email}}).then( user => {
+    if(!user) {
+      bcrypt.hash(req.body.password, 14, (err, hash) => {
+        if(!err) {
+          let newUser = {
+            nick: req.body.nick,
+            email: req.body.email,
+            password: hash
+          };
+          models.User.create(newUser).then(user => {
+            res.redirect('/dashboard/users');
+          });
+        }
+      });
+
+    } else {
+      res.render('/dashboard/users/create', {error: "User with this email already exist"});
+    }
+  });
+});
+
 
 router.get('/users/:id', (req, res) => {
   console.log("PARAM_ID", req.params.id);
@@ -35,27 +65,49 @@ router.get('/users/:id', (req, res) => {
   });
 });
 
+router.get('/users/:id/edit', (req, res) => {
+  models.User.findOne({
+    where: {id: req.params.id},
+    include: [{model: models.Role, as: 'role', attributes: ['id', 'name']}]
+  }).then(user => {
+    // res.send(user);
+    res.render('dashboard/users/edit', {user: user});
+  });
+});
+router.post('/users/:id/edit', (req, res) => {
+  models.User.update(
+  {
+    nick: req.body.nick,
+    firstName: req.body.firstname,
+    lastName: req.body.lastname,
+    updatedAt: Date.now()
+  },
+  {
+    where: {
+      id: req.params.id
+    }
+  }).then(user => {
+    res.json(user);
+  });
+});
+router.get('/users/:id/remove', (req,res) => {
+  models.User.findOne({
+    where: {id: req.params.id},
+    include: [{model: models.Role, as: 'role', attributes: ['id', 'name']}]
+  }).then(user => {
+    // res.send(user);
+    res.render('dashboard/users/remove', {pageTitle: "Delete user", user: user});
+  });
+});
+// TODO: THIS POST REMOVE ALL USERS NOT ONE. NEXT TIME NEED FIX
+router.post('/users/:id/remove', (req, res) => {
+  models.User.destroy({
+    where: {id: req.params.id}
+  }).then(user => {
+    console.log(user);
+    res.json(user);
 
-router.post('/users/create', (req, res) => {
-    models.User.findOne({where: {email: req.body.email}}).then( user => {
-        if(!user) {
-            bcrypt.hash(req.body.password, 14, (err, hash) => {
-                if(!err) {
-                    let newUser = {
-                        nick: req.body.nick,
-                        email: req.body.email,
-                        password: hash
-                    };
-                    models.User.create(newUser).then(user => {
-                        res.redirect('/dashboard/users');
-                    });
-                }
-            });
-
-        } else {
-            res.render('/dashboard/users/create', {error: "User with this email already exist"});
-        }
-    });
+  })
 });
 
 export default router;

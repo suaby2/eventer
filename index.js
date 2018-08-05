@@ -41,7 +41,7 @@ app.use(session({
     resave: false,
     saveUninitialized: true,
     cookie: {
-        maxAge: 60 * 10 * 1000,
+        maxAge: 3600000,
         httpOnly: false
     } // 5 minutes
 }));

@@ -1,0 +1,30 @@
+extends ../base
+block content
+    h1 #{pageTitle}
+    div.row
+        div.col-6
+            form(method="POST")
+                div.form-group
+                    label(for="email") Email <br>
+                    input(type="email" id="email" name="email" class="form-control" value=user.email disabled)
+                //div.form-group
+                //    label(for="password") password <br>
+                //    input(type="text" id="password" name="password" class="form-control" value=user.password required)
+                div.form-group
+                    label(for="nick") Nick <br>
+                    input(type="text" id="nick" name="nick" class="form-control" value=user.nick required)
+                div.form-group
+                    label(for="firstname") Firstname <br>
+                    input(type="text" id="firstname" name="firstname" class="form-control" value=user.firstName)
+                div.form-group
+                    label(for="lastname") Lastname <br>
+                    input(type="text" id="lastname" name="lastname" class="form-control" value=user.lastName)
+                div.form-group
+                    label(for="role") User Role
+                    input(type="text" id="role" name="role"  value=user.role.name class="form-control" disabled)
+                    //if roles
+                    //    select(id="role" name="role" class="form-control" value=user.role.name)
+                    //        each role in roles
+                    //            option(value="#{role.id}") #{role.name}
+                div.form-group
+                    input(type="submit" value="save user" class="btn btn-success")

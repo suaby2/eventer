@@ -1,17 +1,29 @@
-html
-    head
-    body
-        h1 List of users
-
-        form(method="POST", action="/dashboard/users/create")
-            div.form-group
-                label(for="nick") Nick <br>
-                input(type="text" id="nick" name="nick")
-            div.form-group
-                label(for="email") Email <br>
-                input(type="email" id="email" name="email")
-            div.form-group
-                label(for="password") password <br>
-                input(type="text" id="password" name="password")
-            div.form-group
-                input(type="submit" value="save user")
+extends ../base
+block content
+        h1 #{pageTitle}
+        div.row
+            div.col-6
+                form(method="POST", action="/dashboard/users/create")
+                    div.form-group
+                        label(for="email") Email <br>
+                        input(type="email" id="email" name="email" class="form-control" required)
+                    div.form-group
+                        label(for="password") password <br>
+                        input(type="text" id="password" name="password" class="form-control" required)
+                    div.form-group
+                        label(for="nick") Nick <br>
+                        input(type="text" id="nick" name="nick" class="form-control" required)
+                    div.form-group
+                        label(for="firstname") Firstname <br>
+                        input(type="text" id="firstname" name="firstname" class="form-control")
+                    div.form-group
+                        label(for="lastname") Lastname <br>
+                        input(type="text" id="lastname" name="lastname" class="form-control")
+                    div.form-group
+                        label(for="role") User Role
+                        if roles
+                            select(id="role" name="role" class="form-control")
+                                each role in roles
+                                    option(value="#{role.id}") #{role.name}
+                    div.form-group
+                        input(type="submit" value="save user" class="btn btn-success")

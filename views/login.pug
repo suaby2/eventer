@@ -3,14 +3,16 @@ block vars
     - var title = "Login"
 block body
     h2  Login Page
-    form(method="post")
-        div(class="form-group")
-            label Email:
-            input(type="email" name="email" required=true)
-        div(class="form-group")
-            label Password:
-            input(type="password" name="password" required=true)
-        div(class="form-group")
-            input(type="submit")
-    if (error)
-        p=error
+    div.row
+        div.col-3
+            form(method="post")
+                div(class="form-group")
+                    label Email:
+                    input(type="email" name="email" required=true class="form-control")
+                div(class="form-group")
+                    label Password:
+                    input(type="password" name="password" required=true class="form-control")
+                div(class="form-group")
+                    input(type="submit" class="btn btn-primary")
+            if (error)
+                p(class="alert alert-danger" role="alert")=error
